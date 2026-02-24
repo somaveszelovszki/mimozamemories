@@ -1,0 +1,355 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import contactMarkdown from '../../resources/contact/texts.md?raw';
+
+interface FormField {
+  readonly name: string;
+  readonly hint: string;
+  readonly prefill: string;
+  readonly type: 'text' | 'email' | 'tel' | 'textarea' | 'file';
+}
+
+interface SocialLink {
+  readonly platform: string;
+  readonly url: string;
+}
+
+const lines = contactMarkdown.split('\n');
+
+const emailRow = lines.find((line) => line.trim().startsWith('| Email'));
+const contactEmail = emailRow ? emailRow.split('|')[2]?.trim() ?? '' : '';
+
+const socialRows = lines.filter((line) =>
+  line.trim().startsWith('| Facebook') || line.trim().startsWith('| Instagram'),
+);
+
+const socialLinks: readonly SocialLink[] = socialRows.map((row) => {
+  const parts = row.split('|').map((part) => part.trim());
+  return {
+    platform: parts[1],
+    url: parts[2],
+  };
+});
+
+const formHeaderIndex = lines.findIndex((line) => line.trim().startsWith('| Name'));
+const formRows =
+  formHeaderIndex >= 0
+    ? lines.slice(formHeaderIndex + 2).filter((line) => line.trim().startsWith('|'))
+    : [];
+
+const mapLabelToType = (label: string): FormField['type'] => {
+  if (label.toLowerCase().includes('email')) {
+    return 'email';
+  }
+  if (label.toLowerCase().includes('telefonszám')) {
+    return 'tel';
+  }
+  if (label.toLowerCase().includes('üzenet')) {
+    return 'textarea';
+  }
+  if (label.toLowerCase().includes('fájl')) {
+    return 'file';
+  }
+  return 'text';
+};
+
+const formFields: readonly FormField[] = formRows.map((row) => {
+  const parts = row.split('|').map((part) => part.trim());
+  const name = parts[1] ?? '';
+  const hint = parts[2] ?? '';
+  const prefill = parts[3] ?? '';
+
+  return {
+    name,
+    hint,
+    prefill,
+    type: mapLabelToType(name),
+  };
+});
+---
+
+<BaseLayout
+  title="Kapcsolat — Mimóza Memories"
+  description="Lépj kapcsolatba Lizával: kérj ajánlatot esküvői dekorációra vagy kreatív workshopra."
+>
+  <section class="section" aria-labelledby="contact-heading">
+    <header class="section-header">
+      <h1 id="contact-heading">Kapcsolat és ajánlatkérés</h1>
+      <p class="section-intro">
+        Írd le néhány mondatban az esküvőtök vagy az alkalom részleteit, és Liza rövid időn
+        belül válaszol, hogy közösen megtervezzétek a dekorációt.
+      </p>
+    </header>
+
+    <div class="layout">
+      <section aria-label="Elérhetőségek" class="info">
+        <dl class="contact-list">
+          <div>
+            <dt>Email</dt>
+            <dd>
+              {contactEmail ? (
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+              ) : (
+                'liza@mimozamemories.hu'
+              )}
+            </dd>
+          </div>
+        </dl>
+
+        {socialLinks.length > 0 && (
+          <div class="social">
+            <h2>Kövess a közösségi médiában</h2>
+            <ul>
+              {socialLinks.map((item) => (
+                <li>
+                  <a href={item.url} target="_blank" rel="noreferrer">
+                    {item.platform}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p class="note">
+          A válaszban részletesen átbeszéljük az elképzeléseiteket, a költségkeretet és az
+          időpontot, hogy minden részlet a helyére kerüljön.
+        </p>
+      </section>
+
+      <section aria-label="Ajánlatkérő űrlap" class="form-shell">
+        <form
+          class="form"
+          method="post"
+          action={contactEmail ? `mailto:${contactEmail}` : undefined}
+          enctype="multipart/form-data"
+        >
+          {formFields.map((field) => {
+            const id = `field-${field.name.replace(/\s+/g, '-').toLowerCase()}`;
+            const isRequired =
+              field.type === 'text' || field.type === 'email' || field.type === 'tel' || field.type === 'textarea';
+
+            if (field.type === 'textarea') {
+              return (
+                <div class="field">
+                  <label for={id}>{field.name}</label>
+                  <textarea
+                    id={id}
+                    name={field.name}
+                    placeholder={field.hint || undefined}
+                    required={isRequired}
+                  >
+                    {field.prefill}
+                  </textarea>
+                </div>
+              );
+            }
+
+            if (field.type === 'file') {
+              return (
+                <div class="field">
+                  <label for={id}>{field.name}</label>
+                  <input id={id} name={field.name} type="file" />
+                  {field.hint && <p class="hint">{field.hint}</p>}
+                </div>
+              );
+            }
+
+            return (
+              <div class="field">
+                <label for={id}>{field.name}</label>
+                <input
+                  id={id}
+                  name={field.name}
+                  type={field.type}
+                  placeholder={field.hint || undefined}
+                  value={field.prefill || undefined}
+                  required={isRequired}
+                />
+              </div>
+            );
+          })}
+
+          <button type="submit" class="submit-button">
+            Üzenet küldése
+          </button>
+        </form>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    padding: 2.4rem 2rem 2.6rem;
+    border-radius: var(--radius-xl);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(224, 222, 217, 0.9);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .section-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .section-intro {
+    margin: 0;
+    color: var(--color-muted);
+    max-width: 36rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .contact-list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact-list dt {
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .contact-list dd {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .social h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+  }
+
+  .social ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .social a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .note {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+
+  .form-shell {
+    border-radius: 18px;
+    background: #f7f4ef;
+    border: 1px solid rgba(224, 222, 217, 0.9);
+    padding: 1.4rem 1.4rem 1.6rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .field label {
+    font-size: 0.9rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  textarea {
+    border-radius: 999px;
+    border: 1px solid rgba(200, 195, 186, 0.9);
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    background: #fff;
+  }
+
+  textarea {
+    border-radius: 16px;
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  input[type='file'] {
+    font-size: 0.85rem;
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .submit-button {
+    align-self: flex-end;
+    margin-top: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.3rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(to right, #c8a87a, #b4956b);
+    color: #fff;
+    box-shadow: 0 14px 32px rgba(142, 110, 67, 0.35);
+  }
+
+  .submit-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(142, 110, 67, 0.42);
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .section {
+      padding-inline: 1.2rem;
+    }
+
+    .form-shell {
+      padding-inline: 1rem;
+    }
+  }
+</style>
+
