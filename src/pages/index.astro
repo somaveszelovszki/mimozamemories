@@ -6,27 +6,24 @@ import { weddings } from '../lib/weddings';
 const featuredWeddings = weddings.slice(0, 2);
 const featuredCards = featuredWeddings.map((wedding) => ({
   ...wedding,
-  profileSrc: new URL(
-    `../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
-    import.meta.url,
-  ).href,
+  profileSrc: `/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
 }));
 
 const heroImages = [
   {
-    src: new URL('../../resources/wedding/dori-david/dori-david-1.jpg', import.meta.url).href,
+    src: '/wedding/dori-david/dori-david-1.jpg',
     alt: 'Őszi, természetközeli dekoráció Dóri és Dávid esküvőjén',
   },
   {
-    src: new URL('../../resources/wedding/reka-balint/reka-balint-3.jpg', import.meta.url).href,
+    src: '/wedding/reka-balint/reka-balint-3.jpg',
     alt: 'Vidám, sokszínű mezővirágos csokor Réka és Bálint számára',
   },
   {
-    src: new URL('../../resources/wedding/adri-david/adri-david-2.jpg', import.meta.url).href,
+    src: '/wedding/adri-david/adri-david-2.jpg',
     alt: 'Szárazvirág dekoráció finom bézs árnyalatokkal Adri és Dávid napján',
   },
   {
-    src: new URL('../../resources/wedding/reka-balint/reka-balint-5.jpg', import.meta.url).href,
+    src: '/wedding/reka-balint/reka-balint-5.jpg',
     alt: 'Élénk, játékos virágkompozíció kültéri helyszínen',
   },
 ];
@@ -36,416 +33,240 @@ const heroImages = [
   title="Mimóza Memories — Esküvői dekoráció és virágműhely"
   description="Természetes, rusztikus és elegáns esküvői dekorációk, menyasszonyi csokrok és asztaldíszek egy építész szemével."
 >
-  <HeroSlider images={heroImages} client:visible />
+  <div class="home-snap">
+    <section class="home-section home-section--hero" aria-labelledby="hero-heading">
+      <HeroSlider images={heroImages} client:visible />
+    </section>
 
-  <section class="section" aria-labelledby="section-weddings">
-    <div class="section-header">
-      <h2 id="section-weddings">Esküvők, amelyekben benne van a történetetek</h2>
-      <p class="section-intro">
-        Minden dekoráció a párral közös tervezés eredménye: színek, anyagok és hangulatok, amelyek
-        harmonikusan illeszkednek a helyszínhez és hozzátok.
-      </p>
-    </div>
-
-    <div class="wedding-grid">
-      {featuredCards.map((wedding) => (
-        <article class="wedding-card">
-          <div class="wedding-image-shell">
-            <img
-              class="wedding-image"
-              src={wedding.profileSrc}
-              alt={wedding.name}
-              loading="lazy"
-            />
-          </div>
-          <div class="wedding-body">
-            <h3>{wedding.name}</h3>
-            <p>{wedding.caption}</p>
-            <a class="card-link" href={`/wedding/${wedding.slug}`}>Megnézem az esküvőt</a>
-          </div>
-        </article>
-      ))}
-    </div>
-
-    <div class="section-footer">
-      <a class="button subtle" href="/wedding">Minden esküvő megtekintése</a>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="section-process">
-    <div class="section-split">
-      <div>
-        <h2 id="section-process">Hogyan dolgozunk együtt?</h2>
-        <p class="section-intro">
-          Az első beszélgetéstől a nagy napig végigkísérlek titeket: közösen választjuk ki a
-          virágokat, megtervezzük a térdekorációt, és a helyszínen mindent én valósítok meg.
+    <section class="home-section home-section--light" aria-labelledby="home-about">
+      <div class="home-section-inner">
+        <h2 id="home-about">Természetes, mégis kifinomult esküvői dekoráció</h2>
+        <p>
+          Liza építész és virágkötő, aki Amszterdamban tanulta meg, hogyan válhat egy térből
+          személyes, mégis visszafogottan elegáns ünnepi környezet. A Mimóza Memories dekorjai
+          finoman illeszkednek a helyszínhez, az évszakhoz és a történetetekhez.
+        </p>
+        <p>
+          A fókusz mindig a természetes anyagokon, a hosszú távon is harmonikus színhangulaton és a
+          részleteken van – attól a pillanattól kezdve, amikor megérkeznek az első vendégek, egészen
+          az utolsó táncig.
         </p>
       </div>
-      <ol class="steps">
-        <li>
-          <h3>1. Ismerkedés és elképzelések</h3>
-          <p>
-            Online vagy személyes konzultáció, ahol megismerem a történeteteket, a helyszínt és az
-            esküvő hangulatát.
-          </p>
-        </li>
-        <li>
-          <h3>2. Koncepció és látványterv</h3>
-          <p>
-            Színhangulatot, virágfajtákat és dekorációs elemeket állítok össze, amely illeszkedik
-            az évszakhoz és hozzátok.
-          </p>
-        </li>
-        <li>
-          <h3>3. Megvalósítás a nagy napon</h3>
-          <p>
-            A dekorációt én építem fel a helyszínen, hogy ti nyugodtan az ünneplésre
-            koncentrálhassatok.
-          </p>
-        </li>
-      </ol>
-    </div>
-  </section>
+    </section>
+
+    <section class="home-section home-section--beige" aria-labelledby="home-weddings">
+      <div class="home-section-inner">
+        <h2 id="home-weddings">Valódi párok, megőrzött pillanatok</h2>
+        <p>
+          Minden esküvő más: van, akihez a szárított virágok időtlensége áll közel, másokhoz a
+          vidám, sokszínű mezővirágok vagy az őszi erdő árnyalatai. A dekorációk célja, hogy
+          visszanézve is felidézzék azt a napot, nem csak a fotókon, hanem emlékben is.
+        </p>
+
+        <div class="home-wedding-row">
+          {featuredCards.map((wedding) => (
+            <div class="home-wedding-pill">
+              <div class="pill-text">
+                <h3>{wedding.name}</h3>
+                <p>{wedding.caption}</p>
+              </div>
+              <img src={wedding.profileSrc} alt={wedding.name} loading="lazy" />
+            </div>
+          ))}
+        </div>
+
+        <a class="home-link" href="/wedding">Esküvői történetek megtekintése</a>
+      </div>
+    </section>
+
+    <section class="home-section home-section--image" aria-labelledby="home-workshops">
+      <div class="home-section-inner home-section-inner--overlay">
+        <h2 id="home-workshops">Workshopok és kreatív alkalmak</h2>
+        <p>
+          A Mimóza Memories nem csak az esküvő napján van jelen: a karácsonyi koszorúktól a
+          kopogtatókon át a kisebb virágkompozíciókig olyan workshopokat tartunk, ahol a
+          résztvevőknek van idejük lelassulni, alkotni és feltöltődni.
+        </p>
+        <p>
+          Ha szeretnél közösen készíteni valami maradandót, vagy egy személyes meglepetést adnál
+          valakinek, írj Lizának, és megnézzük, milyen alkalom illik hozzád legjobban.
+        </p>
+        <a class="home-cta" href="/contact">Kapcsolatfelvétel Lizával</a>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: 1.5rem 3.5rem;
+  .home-snap {
+    height: calc(100vh - 64px);
+    margin-inline: calc(50% - 50vw);
+    max-width: 100vw;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .hero-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .eyebrow {
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    margin: 0 0 0.75rem;
-  }
-
-  h1 {
-    font-size: clamp(2.2rem, 3vw, 2.8rem);
-    line-height: 1.1;
-    margin: 0 0 1.25rem;
-  }
-
-  .highlight {
+  .home-section {
     position: relative;
-    white-space: nowrap;
-  }
-
-  .highlight::before {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    bottom: -0.1em;
-    height: 0.6em;
-    background: linear-gradient(
-      to right,
-      rgba(232, 209, 168, 0.7),
-      rgba(207, 180, 139, 0.9),
-      rgba(198, 173, 135, 0.7)
-    );
-    border-radius: 999px;
-    z-index: -1;
-  }
-
-  .lead {
-    margin: 0 0 1.6rem;
-    color: var(--color-muted);
-    max-width: 34rem;
-  }
-
-  .hero-actions {
+    min-height: 100vh;
+    scroll-snap-align: start;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.9rem;
-    margin-bottom: 1.6rem;
-  }
-
-  .button {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 0.7rem 1.3rem;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 160ms ease-out, box-shadow 160ms ease-out, background-color 160ms ease-out,
-      border-color 160ms ease-out;
-    text-decoration: none;
   }
 
-  .button.primary {
-    background: linear-gradient(to right, #c8a87a, #b4956b);
-    color: #fff;
-    box-shadow: 0 14px 32px rgba(142, 110, 67, 0.35);
+  .home-section--hero {
+    padding: 0;
   }
 
-  .button.primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 18px 40px rgba(142, 110, 67, 0.42);
-  }
-
-  .button.ghost {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(200, 168, 122, 0.5);
-    color: var(--color-text);
-  }
-
-  .button.ghost:hover {
+  .home-section--light {
     background: #ffffff;
-    border-color: rgba(200, 168, 122, 0.8);
   }
 
-  .button.subtle {
-    background: transparent;
-    border-color: rgba(108, 113, 117, 0.25);
-    color: var(--color-muted);
+  .home-section--beige {
+    background: #f3ebe0;
   }
 
-  .button.subtle:hover {
-    border-color: rgba(108, 113, 117, 0.5);
-    background: rgba(255, 255, 255, 0.7);
-  }
-
-  .hero-meta {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-    margin: 0;
-    padding: 1.1rem 1.2rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(224, 222, 217, 0.9);
-  }
-
-  .hero-meta dt {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    margin-bottom: 0.3rem;
-  }
-
-  .hero-meta dd {
-    font-size: 0.85rem;
-    margin: 0;
-  }
-
-  .hero-visual {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 1.4rem;
-  }
-
-  .hero-card {
-    max-width: 18rem;
-    padding: 1.1rem 1.2rem;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(224, 222, 217, 0.8);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .hero-card-label {
-    margin: 0 0 0.35rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-
-  .hero-card-text {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-
-  .hero-photo-shell {
-    display: grid;
-    grid-template-columns: 1.2fr 0.9fr;
-    gap: 0.8rem;
-    align-items: stretch;
-  }
-
-  .hero-photo {
-    border-radius: var(--radius-xl);
-    background-size: cover;
-    background-position: center;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(224, 222, 217, 0.9);
-  }
-
-  .hero-photo-main {
-    min-height: 260px;
-  }
-
-  .hero-photo-small {
-    min-height: 190px;
+  .home-section--image {
     background-image: linear-gradient(
-      135deg,
-      rgba(210, 188, 150, 0.9),
-      rgba(176, 152, 118, 0.9),
-      rgba(144, 127, 103, 0.9)
-    );
-  }
-
-  .section {
-    margin-top: 2.8rem;
-    padding: 2.4rem 2rem 2.6rem;
-    border-radius: var(--radius-xl);
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(224, 222, 217, 0.9);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .section-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1.8rem;
-  }
-
-  .section-header h2 {
-    margin: 0;
-    font-size: 1.4rem;
-  }
-
-  .section-intro {
-    margin: 0;
-    color: var(--color-muted);
-    max-width: 36rem;
-  }
-
-  .wedding-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.6rem;
-  }
-
-  .wedding-card {
-    border-radius: 20px;
-    overflow: hidden;
-    background: #ffffff;
-    border: 1px solid rgba(224, 222, 217, 0.9);
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-  }
-
-  .wedding-image-shell {
-    padding: 0.75rem 0.75rem 0;
-  }
-
-  .wedding-image {
-    border-radius: 16px;
-    height: 180px;
+        to bottom,
+        rgba(17, 24, 39, 0.7),
+        rgba(17, 24, 39, 0.8)
+      ),
+      url('/wedding/dori-david/dori-david-5.jpg');
     background-size: cover;
     background-position: center;
+    color: #f9fafb;
   }
 
-  .wedding-body {
-    padding: 0.9rem 1.05rem 1.1rem;
+  .home-section-inner {
+    width: 100%;
+    max-width: 960px;
+    margin-inline: auto;
+    padding: 4rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 1.25rem;
   }
 
-  .wedding-body h3 {
-    margin: 0;
-    font-size: 1.05rem;
+  .home-section-inner--overlay {
+    max-width: 720px;
   }
 
-  .wedding-body p {
+  .home-section h2 {
     margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .home-section p {
+    margin: 0;
+    font-size: 0.98rem;
     color: var(--color-muted);
+  }
+
+  .home-section--image p {
+    color: rgba(249, 250, 251, 0.85);
+  }
+
+  .home-wedding-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .home-wedding-pill {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.95rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(224, 222, 217, 0.9);
+  }
+
+  .home-wedding-pill img {
+    width: 120px;
+    height: 80px;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+
+  .pill-text h3 {
+    margin: 0 0 0.2rem;
+    font-size: 0.98rem;
+  }
+
+  .pill-text p {
+    margin: 0;
     font-size: 0.9rem;
   }
 
-  .card-link {
-    margin-top: 0.6rem;
-    font-size: 0.85rem;
+  .home-link {
+    margin-top: 1.4rem;
+    font-size: 0.9rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-text);
   }
 
-  .section-footer {
-    margin-top: 1.8rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .section-split {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr);
-    gap: 2.3rem;
-    align-items: flex-start;
-  }
-
-  .steps {
-    margin: 0;
-    padding-left: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-  }
-
-  .steps li {
-    padding-left: 0.2rem;
-  }
-
-  .steps h3 {
-    margin: 0 0 0.35rem;
-    font-size: 0.98rem;
-  }
-
-  .steps p {
-    margin: 0;
-    color: var(--color-muted);
+  .home-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.6rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
     font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f1d2a5, #c89a62);
+    color: #111827;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.36);
+    text-decoration: none;
+  }
+
+  .home-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.5);
   }
 
   @media (max-width: 900px) {
-    .hero-layout {
-      grid-template-columns: minmax(0, 1fr);
+    .home-snap {
+      height: auto;
+      margin-inline: 0;
+      max-width: 100%;
+      scroll-snap-type: y proximity;
     }
 
-    .hero-visual {
-      align-items: flex-start;
+    .home-section {
+      min-height: auto;
+      padding-block: 3rem;
     }
 
-    .hero-meta {
-      grid-template-columns: minmax(0, 1fr);
-      border-radius: 16px;
-    }
-
-    .section-split {
-      grid-template-columns: minmax(0, 1fr);
+    .home-wedding-pill {
+      grid-template-columns: minmax(0, 1fr) auto;
     }
   }
 
   @media (max-width: 640px) {
-    .hero {
-      padding-block: 1rem 2.5rem;
+    .home-section-inner {
+      padding-inline: 1.25rem;
     }
 
-    .section {
-      padding-inline: 1.2rem;
-    }
-
-    .wedding-grid {
+    .home-wedding-pill {
       grid-template-columns: minmax(0, 1fr);
+      border-radius: 20px;
+    }
+
+    .home-wedding-pill img {
+      width: 100%;
+      height: 120px;
+      border-radius: 16px;
     }
   }
 </style>

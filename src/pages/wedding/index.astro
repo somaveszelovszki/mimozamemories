@@ -4,10 +4,7 @@ import { weddings } from '../../lib/weddings';
 
 const weddingCards = weddings.map((wedding) => ({
   ...wedding,
-  profileSrc: new URL(
-    `../../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
-    import.meta.url,
-  ).href,
+  profileSrc: `/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
 }));
 ---
 

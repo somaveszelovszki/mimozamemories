@@ -23,8 +23,30 @@
   let currentImageIndex = 0;
   let currentTextIndex = 0;
   let localImages: HeroImage[] = [];
+  let typedText = dynamicLines[0];
 
-  const intervalMs = 5500;
+  const imageIntervalMs = 5500;
+  const typingSpeedMs = 70;
+  const holdTextMs = 1800;
+
+  function startTypingCycle(): void {
+    const typeCurrent = (): void => {
+      const full = dynamicLines[currentTextIndex] ?? '';
+      if (typedText.length < full.length) {
+        typedText = full.slice(0, typedText.length + 1);
+        setTimeout(typeCurrent, typingSpeedMs);
+      } else {
+        setTimeout(() => {
+          currentTextIndex = (currentTextIndex + 1) % dynamicLines.length;
+          typedText = '';
+          typeCurrent();
+        }, holdTextMs);
+      }
+    };
+
+    typedText = '';
+    typeCurrent();
+  }
 
   onMount(() => {
     if (images.length > 0) {
@@ -39,15 +61,16 @@
       localImages = images;
     }
 
-    const id = setInterval(() => {
+    const imageInterval = setInterval(() => {
       if (localImages.length > 0) {
         currentImageIndex = (currentImageIndex + 1) % localImages.length;
       }
-      currentTextIndex = (currentTextIndex + 1) % dynamicLines.length;
-    }, intervalMs);
+    }, imageIntervalMs);
+
+    startTypingCycle();
 
     return () => {
-      clearInterval(id);
+      clearInterval(imageInterval);
     };
   });
 </script>
@@ -77,9 +100,7 @@
       <h1 id="hero-heading" class="hero-title">
         <span class="hero-line-static">{staticLine}</span>
         <span class="hero-line-dynamic">
-          <span in:fade={{ duration: 260 }} out:fade={{ duration: 260 }}>
-            {dynamicLines[currentTextIndex]}
-          </span>
+          <span>{typedText}</span>
         </span>
       </h1>
       <p class="hero-lead">
@@ -98,10 +119,10 @@
 <style>
   .hero-root {
     position: relative;
-    margin-inline: calc(50% - 50vw);
-    padding-inline: max(1.5rem, calc(50vw - 540px));
-    padding-top: 5.5rem;
-    padding-bottom: 4.5rem;
+    width: 100%;
+    padding-inline: clamp(1.5rem, 8vw, 4rem);
+    padding-top: 4rem;
+    padding-bottom: 4rem;
     overflow: hidden;
   }
 
@@ -140,10 +161,13 @@
     position: relative;
     z-index: 1;
     height: 100%;
-    max-width: 680px;
+    max-width: 720px;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     padding: 3.5rem 3.2rem;
     color: #f9fafb;
   }
@@ -258,13 +282,6 @@
   }
 
   @media (max-width: 900px) {
-    .hero-root {
-      margin-inline: 0;
-      padding-inline: 1.5rem;
-      padding-top: 4.25rem;
-      padding-bottom: 3.5rem;
-    }
-
     .hero-inner {
       min-height: 70vh;
       border-radius: 28px;
@@ -276,12 +293,6 @@
   }
 
   @media (max-width: 640px) {
-    .hero-root {
-      padding-inline: 1.25rem;
-      padding-top: 4rem;
-      padding-bottom: 3rem;
-    }
-
     .hero-inner {
       min-height: 520px;
       border-radius: 24px;

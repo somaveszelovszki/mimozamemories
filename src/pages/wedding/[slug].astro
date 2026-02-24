@@ -24,19 +24,10 @@ if (!wedding) {
   throw new Error(`Ismeretlen esküvő: ${slug}`);
 }
 
-const profileImage = new URL(
-  `../../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
-  import.meta.url,
-).href;
-
+const profileImage = `/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`;
 const galleryImages =
   wedding.galleryCount > 0
-    ? Array.from({ length: wedding.galleryCount }, (_, index) =>
-        new URL(
-          `../../../resources/wedding/${wedding.slug}/${wedding.slug}-${index + 1}.jpg`,
-          import.meta.url,
-        ).href,
-      )
+    ? Array.from({ length: wedding.galleryCount }, (_, index) => `/wedding/${wedding.slug}/${wedding.slug}-${index + 1}.jpg`)
     : [];
 ---
 
