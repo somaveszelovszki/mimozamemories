@@ -1,0 +1,146 @@
+---
+alwaysApply: true
+---
+
+# Coding Guidelines
+
+This project uses Astro for page-level rendering and Svelte for interactive components.
+All code must be simple, strongly typed, accessible, and performance-focused.
+
+---
+
+## 1. General Principles
+
+- Use TypeScript everywhere (no `any`).
+- Prefer explicit types over inferred complex generics.
+- Keep components small and single-purpose.
+- Prefer composition over abstraction.
+- Avoid premature optimization.
+- Do not introduce dependencies without strong justification.
+- Write code that is readable first, clever second.
+
+---
+
+## 2. Astro Guidelines
+
+- Use Astro components for layout and static rendering.
+- Keep logic out of `.astro` files when possible — move complex logic to utilities.
+- Use partial hydration only when interactivity is required.
+- Prefer `client:visible` or `client:idle` over `client:load` when possible.
+- Avoid sending unnecessary JavaScript to the client.
+- Use content collections for structured content.
+
+### Data Fetching
+
+- Fetch data in Astro server context when possible.
+- Do not fetch data inside Svelte components unless strictly client-driven.
+- Validate external data with Zod before usage.
+
+---
+
+## 3. Svelte Guidelines
+
+- Use `<script lang="ts">`.
+- Avoid large components (>200 lines).
+- Keep reactive statements simple and readable.
+- Do not mutate props.
+- Derive state instead of duplicating it.
+- Use stores only when state must be shared.
+- Prefer local state over global stores.
+- Clean up subscriptions in `onDestroy`.
+
+### Events
+
+- Use explicit event dispatching.
+- Avoid deeply nested event chains.
+- Prefer lifting state up instead of excessive event bubbling.
+
+---
+
+## 4. TypeScript Rules
+
+- `strict: true` is required.
+- No `any`. Use `unknown` when necessary.
+- Prefer discriminated unions over enums.
+- Use utility types (`Pick`, `Omit`, `Record`) carefully.
+- Define return types for exported functions.
+- Never export implicit `any`.
+
+---
+
+## 5. Styling
+
+- Use consistent spacing and naming.
+- Prefer utility-first CSS (if using Tailwind).
+- Avoid deeply nested CSS.
+- Keep styles scoped to components.
+- Extract repeated patterns into reusable components.
+
+---
+
+## 6. Accessibility (Non-Negotiable)
+
+- All interactive elements must be keyboard accessible.
+- Use semantic HTML first.
+- Always provide `alt` text for images.
+- Use `aria-*` only when semantic HTML is insufficient.
+- Ensure proper heading hierarchy.
+
+---
+
+## 7. Performance
+
+- Avoid unnecessary hydration.
+- Minimize client-side JavaScript.
+- Lazy-load heavy components.
+- Optimize images using Astro image tools.
+- Avoid large client-side libraries.
+
+---
+
+## 8. Folder Structure
+
+- `/components` → reusable UI components
+- `/layouts` → layout wrappers
+- `/pages` → Astro route pages
+- `/lib` → utilities and helpers
+- `/stores` → Svelte stores (only if needed)
+- `/types` → shared TypeScript types
+
+---
+
+## 9. Error Handling
+
+- Never swallow errors.
+- Log meaningful messages in development.
+- Fail fast during development.
+- Validate all external input.
+
+---
+
+## 10. Code Style
+
+- Use descriptive variable names.
+- Avoid abbreviations.
+- Keep functions under ~40 lines.
+- Avoid nested conditionals when possible.
+- Prefer early returns.
+
+---
+
+## 11. Testing Philosophy
+
+- Test business logic, not framework internals.
+- Prefer integration tests over brittle unit tests.
+- Mock only external services.
+
+---
+
+## 12. What to Avoid
+
+- Global mutable state
+- Implicit type coercion
+- Large monolithic components
+- Side effects inside derived state
+- Mixing data fetching and UI logic unnecessarily
+- Over-engineering
