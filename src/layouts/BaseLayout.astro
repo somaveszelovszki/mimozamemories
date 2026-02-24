@@ -54,22 +54,22 @@ const { title, description } = Astro.props as Props;
 
 <style>
   :global(:root) {
-    --color-bg: #f7f4ef;
+    --color-bg: #f6f4f0;
     --color-surface: #ffffff;
     --color-accent: #c8a87a;
     --color-accent-soft: #e6d4b6;
-    --color-text: #2f3437;
+    --color-text: #1f2933;
     --color-muted: #6c7175;
-    --color-border-subtle: #e0ded9;
-    --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
-    --radius-xl: 24px;
+    --color-border-subtle: #e2dfd8;
+    --shadow-soft: 0 14px 35px rgba(15, 23, 42, 0.08);
+    --radius-xl: 20px;
   }
 
   :global(body) {
     margin: 0;
     min-height: 100vh;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at top left, #fdf7ee 0, #f7f4ef 40%, #f3eee7 100%);
+    background-color: var(--color-bg);
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
   }
@@ -100,13 +100,8 @@ const { title, description } = Astro.props as Props;
     top: 0;
     z-index: 20;
     backdrop-filter: blur(18px);
-    background: linear-gradient(
-      to bottom,
-      rgba(247, 244, 239, 0.94),
-      rgba(247, 244, 239, 0.86),
-      transparent
-    );
-    border-bottom: 1px solid rgba(224, 222, 217, 0.6);
+    background-color: rgba(246, 244, 240, 0.94);
+    border-bottom: 1px solid rgba(226, 223, 216, 0.8);
   }
 
   .header-inner {
@@ -124,23 +119,11 @@ const { title, description } = Astro.props as Props;
   }
 
   .brand-mark {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 999px;
-    background: radial-gradient(circle at 30% 20%, #ffe9a9, #e2c79c 40%, #c3a47a 100%);
-    box-shadow: 0 10px 28px rgba(148, 120, 82, 0.4);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .brand-mark::before {
-    content: '';
-    position: absolute;
-    inset: 12px 9px 6px 11px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.78);
-    border-top-color: transparent;
-    border-right-color: transparent;
+    border: 1px solid rgba(200, 184, 150, 0.7);
+    background: radial-gradient(circle at 30% 20%, #f6e8cf, #ddc39c);
   }
 
   .brand-text {
@@ -199,13 +182,13 @@ const { title, description } = Astro.props as Props;
   }
 
   .site-main {
-    padding-block: 2.75rem 3.5rem;
+    padding-block: 2.25rem 3rem;
   }
 
   .site-footer {
     border-top: 1px solid var(--color-border-subtle);
-    padding-block: 1.75rem 2.25rem;
-    background: rgba(255, 255, 255, 0.7);
+    padding-block: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .footer-inner {

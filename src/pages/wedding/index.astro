@@ -1,6 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { weddings } from '../../lib/weddings';
+
+const weddingCards = weddings.map((wedding) => ({
+  ...wedding,
+  profileSrc: new URL(
+    `../../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
+    import.meta.url,
+  ).href,
+}));
 ---
 
 <BaseLayout
@@ -17,16 +25,15 @@ import { weddings } from '../../lib/weddings';
     </header>
 
     <div class="wedding-grid">
-      {weddings.map((wedding) => (
+      {weddingCards.map((wedding) => (
         <article class="wedding-card">
           <a class="card-link-wrapper" href={`/wedding/${wedding.slug}`}>
             <div class="wedding-image-shell">
-              <div
+              <img
                 class="wedding-image"
-                style={`background-image: url('${new URL(
-                  `../../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
-                  import.meta.url,
-                ).href}');`}
+                src={wedding.profileSrc}
+                alt={wedding.name}
+                loading="lazy"
               />
             </div>
             <div class="wedding-body">

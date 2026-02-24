@@ -3,6 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { weddings } from '../lib/weddings';
 
 const featuredWeddings = weddings.slice(0, 2);
+const featuredCards = featuredWeddings.map((wedding) => ({
+  ...wedding,
+  profileSrc: new URL(
+    `../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
+    import.meta.url,
+  ).href,
+}));
+const heroMainImage = new URL('../../resources/about-me/liza-working.jpg', import.meta.url).href;
 ---
 
 <BaseLayout
@@ -53,7 +61,13 @@ const featuredWeddings = weddings.slice(0, 2);
         </div>
 
         <div class="hero-photo-shell">
-          <div class="hero-photo hero-photo-main"></div>
+          <div class="hero-photo hero-photo-main">
+            <img
+              src={heroMainImage}
+              alt="Liza munka közben a Mimóza Memories virágműhelyben"
+              loading="lazy"
+            />
+          </div>
           <div class="hero-photo hero-photo-small"></div>
         </div>
       </div>
@@ -70,15 +84,14 @@ const featuredWeddings = weddings.slice(0, 2);
     </div>
 
     <div class="wedding-grid">
-      {featuredWeddings.map((wedding) => (
+      {featuredCards.map((wedding) => (
         <article class="wedding-card">
           <div class="wedding-image-shell">
-            <div
+            <img
               class="wedding-image"
-              style={`background-image: url('${new URL(
-                `../../resources/wedding/${wedding.slug}/${wedding.slug}-profile.jpg`,
-                import.meta.url,
-              ).href}');`}
+              src={wedding.profileSrc}
+              alt={wedding.name}
+              loading="lazy"
             />
           </div>
           <div class="wedding-body">
@@ -311,7 +324,6 @@ const featuredWeddings = weddings.slice(0, 2);
 
   .hero-photo-main {
     min-height: 260px;
-    background-image: url('{new URL("../../resources/about-me/liza-working.jpg", import.meta.url).href}');
   }
 
   .hero-photo-small {
@@ -473,15 +485,3 @@ const featuredWeddings = weddings.slice(0, 2);
     }
   }
 </style>
-
----
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
----
-
-<Layout>
-	<Welcome />
-</Layout>

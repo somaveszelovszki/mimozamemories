@@ -1,9 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getWeddingBySlug } from '../../lib/weddings';
+import { getWeddingBySlug, weddings } from '../../lib/weddings';
 
 interface Params {
   readonly slug?: string;
+}
+
+export function getStaticPaths() {
+  return weddings.map((wedding) => ({
+    params: { slug: wedding.slug },
+  }));
 }
 
 const { slug } = Astro.params as Params;
