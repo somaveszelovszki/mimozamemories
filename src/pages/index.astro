@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSlider from '../components/HeroSlider.svelte';
 import { weddings } from '../lib/weddings';
 
 const featuredWeddings = weddings.slice(0, 2);
@@ -10,69 +11,32 @@ const featuredCards = featuredWeddings.map((wedding) => ({
     import.meta.url,
   ).href,
 }));
-const heroMainImage = new URL('../../resources/about-me/liza-working.jpg', import.meta.url).href;
+
+const heroImages = [
+  {
+    src: new URL('../../resources/wedding/dori-david/dori-david-1.jpg', import.meta.url).href,
+    alt: 'Őszi, természetközeli dekoráció Dóri és Dávid esküvőjén',
+  },
+  {
+    src: new URL('../../resources/wedding/reka-balint/reka-balint-3.jpg', import.meta.url).href,
+    alt: 'Vidám, sokszínű mezővirágos csokor Réka és Bálint számára',
+  },
+  {
+    src: new URL('../../resources/wedding/adri-david/adri-david-2.jpg', import.meta.url).href,
+    alt: 'Szárazvirág dekoráció finom bézs árnyalatokkal Adri és Dávid napján',
+  },
+  {
+    src: new URL('../../resources/wedding/reka-balint/reka-balint-5.jpg', import.meta.url).href,
+    alt: 'Élénk, játékos virágkompozíció kültéri helyszínen',
+  },
+];
 ---
 
 <BaseLayout
   title="Mimóza Memories — Esküvői dekoráció és virágműhely"
   description="Természetes, rusztikus és elegáns esküvői dekorációk, menyasszonyi csokrok és asztaldíszek egy építész szemével."
 >
-  <section class="hero" aria-labelledby="hero-heading">
-    <div class="hero-layout">
-      <div class="hero-copy">
-        <p class="eyebrow">Mimóza Memories</p>
-        <h1 id="hero-heading">
-          Természetes, <span class="highlight">mezővirágos</span> esküvői dekoráció
-        </h1>
-        <p class="lead">
-          Liza építész és virágkötő, aki Amszterdamban tanulta meg, hogyan válhat egy térből
-          személyes, mégis visszafogottan elegáns ünnepi környezet. Rusztikus, modern és
-          időtálló dekorációk, amelyek valóban rólatok szólnak.
-        </p>
-
-        <div class="hero-actions">
-          <a class="button primary" href="/wedding">Esküvői inspirációk</a>
-          <a class="button ghost" href="/contact">Írj Lizának</a>
-        </div>
-
-        <dl class="hero-meta">
-          <div>
-            <dt>Esküvői dekoráció</dt>
-            <dd>Teljes virág- és térdekor, a szertartástól a vacsoráig.</dd>
-          </div>
-          <div>
-            <dt>Menyasszonyi csokrok</dt>
-            <dd>Természetes, kissé szabálytalan, mégis harmonikus kompozíciók.</dd>
-          </div>
-          <div>
-            <dt>Workshopok</dt>
-            <dd>Kreatív alkalmak koszorú-, és kisebb dekor készítéssel.</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div class="hero-visual" aria-hidden="true">
-        <div class="hero-card">
-          <p class="hero-card-label">Liza, a Mimóza mögött</p>
-          <p class="hero-card-text">
-            „Számomra az a fontos, hogy az esküvő virágai őszintén meséljenek rólatok – a kedvenc
-            színeitekről, helyeitekről, emlékeitekről.”
-          </p>
-        </div>
-
-        <div class="hero-photo-shell">
-          <div class="hero-photo hero-photo-main">
-            <img
-              src={heroMainImage}
-              alt="Liza munka közben a Mimóza Memories virágműhelyben"
-              loading="lazy"
-            />
-          </div>
-          <div class="hero-photo hero-photo-small"></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <HeroSlider images={heroImages} client:visible />
 
   <section class="section" aria-labelledby="section-weddings">
     <div class="section-header">
