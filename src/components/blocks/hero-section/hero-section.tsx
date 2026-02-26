@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export type MenuData = {
   id: number
@@ -10,14 +11,93 @@ export type MenuData = {
   userComment: string
 }
 
-const imageRotationAngles = [0, 10, 20, 30, 40]
+interface ImagePose {
+  angle: number
+  offsetX: number
+  offsetY: number
+}
+
+interface ImageStackState {
+  startImageIndex: number
+  visibleCount: number
+  posesByImageIndex: Record<number, ImagePose>
+  variantByImageIndex: Record<number, string>
+  variantCursor: number
+}
+
+const STACK_DEPTH = 4
+const CARD_SCALE = 1.2
+const VARIANTS = ['történet', 'mosoly', 'pillanat', 'ölelés', 'meglepetés', 'emlék']
+
+const randomInRange = (min: number, max: number): number => {
+  return Math.round(Math.random() * (max - min) + min)
+}
+
+const createRandomPose = (): ImagePose => {
+  return {
+    angle: randomInRange(-8, 8),
+    offsetX: randomInRange(-40, 40),
+    offsetY: randomInRange(-40, 40)
+  }
+}
+
+const getVisibleIndices = (startImageIndex: number, imageCount: number, visibleCount: number): number[] => {
+  const safeDepth = Math.min(Math.max(visibleCount, 0), STACK_DEPTH, imageCount)
+
+  return Array.from({ length: safeDepth }, (_, depth) => (startImageIndex + depth) % imageCount)
+}
+
+const getNextStackState = (previousStack: ImageStackState, imageCount: number): ImageStackState => {
+  const maxDepth = Math.min(STACK_DEPTH, imageCount)
+  const canGrow = previousStack.visibleCount < maxDepth
+
+  const nextVisibleCount = canGrow ? previousStack.visibleCount + 1 : previousStack.visibleCount
+  const nextStartImageIndex = canGrow ? previousStack.startImageIndex : (previousStack.startImageIndex + 1) % imageCount
+  const nextVisibleIndices = getVisibleIndices(nextStartImageIndex, imageCount, nextVisibleCount)
+  const nextPosesByImageIndex: Record<number, ImagePose> = {}
+  const nextVariantByImageIndex: Record<number, string> = {}
+  const nextTopImageIndex = nextVisibleIndices[nextVisibleIndices.length - 1]
+  const nextTopVariant = VARIANTS[previousStack.variantCursor % VARIANTS.length]
+
+  nextVisibleIndices.forEach(imageIndex => {
+    nextPosesByImageIndex[imageIndex] = previousStack.posesByImageIndex[imageIndex] ?? createRandomPose()
+    nextVariantByImageIndex[imageIndex] = previousStack.variantByImageIndex[imageIndex] ?? nextTopVariant
+  })
+
+  nextVariantByImageIndex[nextTopImageIndex] = nextTopVariant
+
+  return {
+    startImageIndex: nextStartImageIndex,
+    visibleCount: nextVisibleCount,
+    posesByImageIndex: nextPosesByImageIndex,
+    variantByImageIndex: nextVariantByImageIndex,
+    variantCursor: previousStack.variantCursor + 1
+  }
+}
 
 const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
-  const [imageStack, setImageStack] = useState({ startImageIndex: 0, rotationOffset: 0 })
+  const [imageStack, setImageStack] = useState(() => {
+    const imageCount = menudata.length
+    const initialVisibleCount = imageCount > 0 ? 1 : 0
+    const visibleIndices = imageCount > 0 ? getVisibleIndices(0, imageCount, initialVisibleCount) : []
+    const posesByImageIndex: Record<number, ImagePose> = {}
+    const variantByImageIndex: Record<number, string> = {}
+
+    visibleIndices.forEach(imageIndex => {
+      posesByImageIndex[imageIndex] = createRandomPose()
+      variantByImageIndex[imageIndex] = VARIANTS[0]
+    })
+
+    return {
+      startImageIndex: 0,
+      visibleCount: initialVisibleCount,
+      posesByImageIndex,
+      variantByImageIndex,
+      variantCursor: 1
+    }
+  })
+
   const [activeVariantIndex, setActiveVariantIndex] = useState(0)
-  const [isTopCardEntering, setIsTopCardEntering] = useState(false)
-  const hasMountedRef = useRef(false)
-  const variants = ['történet', 'mosoly', 'pillanat', 'ölelés', 'meglepetés', 'emlék']
 
   useEffect(() => {
     if (menudata.length <= 1) {
@@ -25,11 +105,8 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
     }
 
     const imageIntervalId = window.setInterval(() => {
-      setImageStack(prevStack => ({
-        startImageIndex: (prevStack.startImageIndex + 1) % menudata.length,
-        rotationOffset: (prevStack.rotationOffset + 1) % imageRotationAngles.length
-      }))
-    }, 2000)
+      setImageStack(previousStack => getNextStackState(previousStack, menudata.length))
+    }, 5000)
 
     return () => {
       window.clearInterval(imageIntervalId)
@@ -38,48 +115,18 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
 
   useEffect(() => {
     const textIntervalId = window.setInterval(() => {
-      setActiveVariantIndex(previousIndex => (previousIndex + 1) % variants.length)
-    }, 2000)
+      setActiveVariantIndex(previousIndex => (previousIndex + 1) % VARIANTS.length)
+    }, 5000)
 
     return () => {
       window.clearInterval(textIntervalId)
     }
-  }, [variants.length])
+  }, [])
 
-  useEffect(() => {
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true
+  const stackImageIndices = getVisibleIndices(imageStack.startImageIndex, menudata.length, imageStack.visibleCount)
 
-      return
-    }
-
-    const resetTimeoutId = window.setTimeout(() => {
-      setIsTopCardEntering(false)
-    }, 900)
-
-    const animationFrameId = window.requestAnimationFrame(() => {
-      setIsTopCardEntering(true)
-    })
-
-    return () => {
-      window.clearTimeout(resetTimeoutId)
-      window.cancelAnimationFrame(animationFrameId)
-    }
-  }, [imageStack])
-
-  const stackImageIndices = Array.from({ length: Math.min(3, menudata.length) }, (_, depth) => {
-    return (imageStack.startImageIndex + depth) % menudata.length
-  })
-
-  const getCardTransform = (imageRotationOffset: number, zIndex: number, isEntering: boolean): string => {
-    if (isEntering) {
-      //      return 'translate(420px, -22px) translate(-50%, -50%) rotate(13deg)'
-      return 'translate(150%, 20%)'
-    }
-
-    const rotationAngle = imageRotationAngles[(imageRotationOffset + zIndex) % imageRotationAngles.length]
-
-    return `translate(-50%, -50%) translate(0px, 0px) rotate(${rotationAngle}deg)`
+  const getCardTransform = (pose: ImagePose): string => {
+    return `translate(-50%, -50%) translate(${pose.offsetX}px, ${pose.offsetY}px) rotate(${pose.angle}deg) scale(${CARD_SCALE})`
   }
 
   return (
@@ -89,12 +136,12 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
     >
       <div className='mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8'>
         <div className='flex flex-col items-start justify-center'>
-          <h1 className='text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-7xl'>
+          <h1
+            className='text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-7xl'
+            style={{ fontFamily: 'Charlotte, cursive' }}
+          >
             Egy szál virág...
           </h1>
-          <h2 className='text-primary mt-3 translate-x-6 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-7xl'>
-            ...egy {variants[activeVariantIndex]}
-          </h2>
           <p className='text-muted-foreground mt-8 max-w-sm text-base leading-relaxed sm:text-lg'>
             Természetes, személyes, időtálló virágdekorációkat tervezünk a ti történetetekhez, mindig szeretettel.
           </p>
@@ -102,30 +149,81 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
 
         <div className='relative h-[32rem] w-full overflow-visible sm:h-[38rem] lg:h-[42rem]'>
           <div className='from-muted/20 to-background absolute inset-0 rounded-2xl bg-gradient-to-br' />
-          {stackImageIndices.map((imageIndex, zIndex) => {
-            const item = menudata[imageIndex]
-            const isTopCard = zIndex === stackImageIndices.length - 1
+          <AnimatePresence mode='sync'>
+            {stackImageIndices.map((imageIndex, zIndex) => {
+              const item = menudata[imageIndex]
+              const isBottomCard = zIndex === 0
+              const isTopCard = zIndex === stackImageIndices.length - 1
+              const pose = imageStack.posesByImageIndex[imageIndex] ?? createRandomPose()
+              const cardVariant = imageStack.variantByImageIndex[imageIndex] ?? VARIANTS[activeVariantIndex]
 
-            return (
-              <div
-                key={`${item.id}-${zIndex}`}
-                className={`absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-lg bg-white p-3 pb-14 shadow-2xl ${
-                  isTopCard && isTopCardEntering ? 'transition-transform duration-[900ms] ease-out' : 'transition-none'
-                }`}
-                style={{
-                  zIndex: 30 + zIndex,
-                  transform: `${getCardTransform(imageStack.rotationOffset, zIndex, isTopCard && isTopCardEntering)}`
-                }}
-              >
-                <img
-                  src={item.img}
-                  alt={item.imgAlt}
-                  className='h-[18rem] w-full rounded-sm object-cover sm:h-[22rem]'
-                  loading='lazy'
-                />
-              </div>
-            )
-          })}
+              if (isTopCard) {
+                return (
+                  <motion.div
+                    key={`top-${item.id}-${imageStack.startImageIndex}`}
+                    className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] bg-white p-3 pb-20 shadow-2xl'
+                    style={{ zIndex: 30 + zIndex }}
+                    initial={{
+                      transform: `translate(-50%, -50%) translate(480px, -30px) rotate(14deg) scale(${CARD_SCALE})`,
+                      opacity: 0
+                    }}
+                    animate={{
+                      transform: getCardTransform(pose),
+                      opacity: [0, 1, 1]
+                    }}
+                    transition={{
+                      duration: 0.9,
+                      ease: 'easeOut',
+                      opacity: {
+                        duration: 0.9,
+                        times: [0, 0.3, 1],
+                        ease: 'linear'
+                      }
+                    }}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.imgAlt}
+                      className='h-[18rem] w-full rounded-[5px] object-cover sm:h-[22rem]'
+                      loading='lazy'
+                    />
+                    <p
+                      className='text-primary absolute right-0 bottom-6 left-0 text-center text-2xl font-medium tracking-wide sm:text-3xl'
+                      style={{ fontFamily: 'Charlotte, cursive' }}
+                    >
+                      ...egy {cardVariant}
+                    </p>
+                  </motion.div>
+                )
+              }
+
+              return (
+                <motion.div
+                  key={`${item.id}-${zIndex}`}
+                  className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] bg-white p-3 pb-20 shadow-2xl'
+                  style={{
+                    zIndex: 30 + zIndex,
+                    transform: getCardTransform(pose)
+                  }}
+                  initial={false}
+                  exit={isBottomCard ? { opacity: 0, transition: { duration: 0.8, ease: 'easeOut' } } : undefined}
+                >
+                  <img
+                    src={item.img}
+                    alt={item.imgAlt}
+                    className='h-[18rem] w-full rounded-[5px] object-cover sm:h-[22rem]'
+                    loading='lazy'
+                  />
+                  <p
+                    className='text-primary absolute right-0 bottom-6 left-0 text-center text-2xl font-medium tracking-wide sm:text-3xl'
+                    style={{ fontFamily: 'Charlotte, cursive' }}
+                  >
+                    ...egy {cardVariant}
+                  </p>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
         </div>
       </div>
     </section>
