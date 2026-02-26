@@ -20,8 +20,7 @@ const PopularDishes = ({ popularDishes }: { popularDishes: PopularDish }) => {
           </Badge>
           <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>Kiemelt munkáink</h2>
           <p className='text-muted-foreground text-xl'>
-            Valódi párok valódi történetei, ahol a virágok, textíliák és részletek egy közös hangulattá
-            álltak össze.
+            Valódi párok valódi történetei, ahol a virágok, textíliák és részletek egy közös hangulattá álltak össze.
           </p>
         </div>
 

@@ -23,8 +23,8 @@ const NewItems = ({ newItems }: { newItems: NewItem }) => {
           </Badge>
           <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>Fő területeink</h2>
           <p className='text-muted-foreground text-xl'>
-            A menyasszonyi csokortól a szertartási installációkon át a komplett dekorációig minden
-            elemet közös koncepció mentén tervezünk.
+            A menyasszonyi csokortól a szertartási installációkon át a komplett dekorációig minden elemet közös
+            koncepció mentén tervezünk.
           </p>
         </div>
 

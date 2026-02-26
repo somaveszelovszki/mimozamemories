@@ -25,8 +25,8 @@ const AboutUs = ({ stats }: { stats: Stat[] }) => {
           </Badge>
           <h2 className='text-2xl font-semibold tracking-tight md:text-3xl lg:text-4xl'>A Mimóza története</h2>
           <p className='text-muted-foreground text-xl'>
-            Liza építészeti szemléletét és virágkötészeti tapasztalatát ötvözve alkotunk olyan tereket,
-            amelyek egyszerre elegánsak, természetesek és személyesek.
+            Liza építészeti szemléletét és virágkötészeti tapasztalatát ötvözve alkotunk olyan tereket, amelyek
+            egyszerre elegánsak, természetesek és személyesek.
           </p>
           <Button
             size='lg'

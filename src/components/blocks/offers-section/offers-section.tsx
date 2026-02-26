@@ -31,8 +31,7 @@ const Gallery = ({ galleryImage }: { galleryImage: GalleryImage }) => {
           <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>Inspiráció valódi esküvőkből</h2>
 
           <p className='text-muted-foreground text-xl'>
-            Vizuális részletek a korábbi munkáinkból, ahol a természetes stílus és az évszak karaktere
-            találkozik.
+            Vizuális részletek a korábbi munkáinkból, ahol a természetes stílus és az évszak karaktere találkozik.
           </p>
         </div>
 

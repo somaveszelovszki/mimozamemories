@@ -29,7 +29,12 @@ const Footer = () => {
         </div>
 
         <div className='flex items-center gap-4'>
-          <a href='https://www.facebook.com/mimozadesign' className='hover:text-primary' target='_blank' rel='noreferrer'>
+          <a
+            href='https://www.facebook.com/mimozadesign'
+            className='hover:text-primary'
+            target='_blank'
+            rel='noreferrer'
+          >
             <FacebookIcon className='size-5' />
           </a>
           <a

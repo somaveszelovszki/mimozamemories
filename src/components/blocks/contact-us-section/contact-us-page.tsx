@@ -24,8 +24,8 @@ const ContactUs = ({ contactInfo }: { contactInfo: ContactInfo }) => {
           </Badge>
           <h2 className='text-2xl font-semibold md:text-3xl lg:text-4xl'>Lépj kapcsolatba velünk</h2>
           <p className='text-muted-foreground text-xl'>
-            Írd meg az elképzeléseiteket, és egyeztetünk egy rövid beszélgetést, ahol közösen
-            kialakítjuk a dekoráció irányát.
+            Írd meg az elképzeléseiteket, és egyeztetünk egy rövid beszélgetést, ahol közösen kialakítjuk a dekoráció
+            irányát.
           </p>
         </div>
 
@@ -40,8 +40,8 @@ const ContactUs = ({ contactInfo }: { contactInfo: ContactInfo }) => {
           <div>
             <h3 className='mb-2 text-2xl'>Itt kezdődik a közös tervezés</h3>
             <p className='text-muted-foreground mb-10 text-lg'>
-              Legyen szó teljes esküvői dekorációról vagy egyedi virágkötészetről, segítünk megtalálni a
-              hozzátok illő megoldást.
+              Legyen szó teljes esküvői dekorációról vagy egyedi virágkötészetről, segítünk megtalálni a hozzátok illő
+              megoldást.
             </p>
 
             {/* Contact Info Grid */}
