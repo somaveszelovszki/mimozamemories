@@ -161,7 +161,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
                 return (
                   <motion.div
                     key={`top-${item.id}-${imageStack.startImageIndex}`}
-                    className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] bg-white p-3 pb-20 shadow-2xl'
+                    className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] border border-black/12 bg-white p-3 pb-20 shadow-[0_10px_25px_rgba(0,0,0,0.18)]'
                     style={{ zIndex: 30 + zIndex }}
                     initial={{
                       transform: `translate(-50%, -50%) translate(480px, -30px) rotate(14deg) scale(${CARD_SCALE})`,
@@ -200,7 +200,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
               return (
                 <motion.div
                   key={`${item.id}-${zIndex}`}
-                  className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] bg-white p-3 pb-20 shadow-2xl'
+                  className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] border border-black/12 bg-white p-3 pb-20 shadow-[0_10px_25px_rgba(0,0,0,0.18)]'
                   style={{
                     zIndex: 30 + zIndex,
                     transform: getCardTransform(pose)
