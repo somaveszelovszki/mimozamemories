@@ -17,10 +17,20 @@ interface ImagePose {
   offsetY: number
 }
 
+interface EntryMotion {
+  startX: number
+  startY: number
+  startAngle: number
+  stiffness: number
+  damping: number
+  fadeDuration: number
+}
+
 interface ImageStackState {
   startImageIndex: number
   visibleCount: number
   posesByImageIndex: Record<number, ImagePose>
+  entryByImageIndex: Record<number, EntryMotion>
   variantByImageIndex: Record<number, string>
   variantCursor: number
 }
@@ -33,11 +43,26 @@ const randomInRange = (min: number, max: number): number => {
   return Math.round(Math.random() * (max - min) + min)
 }
 
+const randomFloatInRange = (min: number, max: number): number => {
+  return Number((Math.random() * (max - min) + min).toFixed(2))
+}
+
 const createRandomPose = (): ImagePose => {
   return {
     angle: randomInRange(-8, 8),
     offsetX: randomInRange(-40, 40),
     offsetY: randomInRange(-40, 40)
+  }
+}
+
+const createRandomEntryMotion = (): EntryMotion => {
+  return {
+    startX: randomInRange(430, 620),
+    startY: randomInRange(-65, 60),
+    startAngle: randomInRange(-2, 18),
+    stiffness: randomInRange(85, 120),
+    damping: randomInRange(22, 30),
+    fadeDuration: randomFloatInRange(1.05, 1.45)
   }
 }
 
@@ -55,21 +80,25 @@ const getNextStackState = (previousStack: ImageStackState, imageCount: number): 
   const nextStartImageIndex = canGrow ? previousStack.startImageIndex : (previousStack.startImageIndex + 1) % imageCount
   const nextVisibleIndices = getVisibleIndices(nextStartImageIndex, imageCount, nextVisibleCount)
   const nextPosesByImageIndex: Record<number, ImagePose> = {}
+  const nextEntryByImageIndex: Record<number, EntryMotion> = {}
   const nextVariantByImageIndex: Record<number, string> = {}
   const nextTopImageIndex = nextVisibleIndices[nextVisibleIndices.length - 1]
   const nextTopVariant = VARIANTS[previousStack.variantCursor % VARIANTS.length]
 
   nextVisibleIndices.forEach(imageIndex => {
     nextPosesByImageIndex[imageIndex] = previousStack.posesByImageIndex[imageIndex] ?? createRandomPose()
+    nextEntryByImageIndex[imageIndex] = previousStack.entryByImageIndex[imageIndex] ?? createRandomEntryMotion()
     nextVariantByImageIndex[imageIndex] = previousStack.variantByImageIndex[imageIndex] ?? nextTopVariant
   })
 
+  nextEntryByImageIndex[nextTopImageIndex] = createRandomEntryMotion()
   nextVariantByImageIndex[nextTopImageIndex] = nextTopVariant
 
   return {
     startImageIndex: nextStartImageIndex,
     visibleCount: nextVisibleCount,
     posesByImageIndex: nextPosesByImageIndex,
+    entryByImageIndex: nextEntryByImageIndex,
     variantByImageIndex: nextVariantByImageIndex,
     variantCursor: previousStack.variantCursor + 1
   }
@@ -81,10 +110,12 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
     const initialVisibleCount = imageCount > 0 ? 1 : 0
     const visibleIndices = imageCount > 0 ? getVisibleIndices(0, imageCount, initialVisibleCount) : []
     const posesByImageIndex: Record<number, ImagePose> = {}
+    const entryByImageIndex: Record<number, EntryMotion> = {}
     const variantByImageIndex: Record<number, string> = {}
 
     visibleIndices.forEach(imageIndex => {
       posesByImageIndex[imageIndex] = createRandomPose()
+      entryByImageIndex[imageIndex] = createRandomEntryMotion()
       variantByImageIndex[imageIndex] = VARIANTS[0]
     })
 
@@ -92,6 +123,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
       startImageIndex: 0,
       visibleCount: initialVisibleCount,
       posesByImageIndex,
+      entryByImageIndex,
       variantByImageIndex,
       variantCursor: 1
     }
@@ -106,7 +138,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
 
     const imageIntervalId = window.setInterval(() => {
       setImageStack(previousStack => getNextStackState(previousStack, menudata.length))
-    }, 5000)
+    }, 3000)
 
     return () => {
       window.clearInterval(imageIntervalId)
@@ -155,6 +187,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
               const isBottomCard = zIndex === 0
               const isTopCard = zIndex === stackImageIndices.length - 1
               const pose = imageStack.posesByImageIndex[imageIndex] ?? createRandomPose()
+              const entryMotion = imageStack.entryByImageIndex[imageIndex] ?? createRandomEntryMotion()
               const cardVariant = imageStack.variantByImageIndex[imageIndex] ?? VARIANTS[activeVariantIndex]
 
               if (isTopCard) {
@@ -164,7 +197,7 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
                     className='absolute top-1/2 left-1/2 w-[75%] max-w-[25rem] rounded-[5px] border border-black/12 bg-white p-3 pb-20 shadow-[0_10px_25px_rgba(0,0,0,0.18)]'
                     style={{ zIndex: 30 + zIndex }}
                     initial={{
-                      transform: `translate(-50%, -50%) translate(480px, -30px) rotate(14deg) scale(${CARD_SCALE})`,
+                      transform: `translate(-50%, -50%) translate(${entryMotion.startX}px, ${entryMotion.startY}px) rotate(${entryMotion.startAngle}deg) scale(${CARD_SCALE})`,
                       opacity: 0
                     }}
                     animate={{
@@ -172,10 +205,12 @@ const HeroSection = ({ menudata }: { menudata: MenuData[] }) => {
                       opacity: [0, 1, 1]
                     }}
                     transition={{
-                      duration: 0.9,
-                      ease: 'easeOut',
+                      type: 'spring',
+                      stiffness: entryMotion.stiffness,
+                      damping: entryMotion.damping,
+                      mass: 0.9,
                       opacity: {
-                        duration: 0.9,
+                        duration: entryMotion.fadeDuration,
                         times: [0, 0.3, 1],
                         ease: 'linear'
                       }
