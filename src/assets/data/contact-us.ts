@@ -9,10 +9,10 @@ export const contactInfo = [
   {
     title: 'Helyszín',
     icon: MapPinIcon,
-    description: 'Budapest és környéke\nKiszállással országosan'
+    description: 'Tata és környéke\nKiszállással országosan'
   },
   {
-    title: 'Email cím',
+    title: 'Email',
     icon: Mail,
     description: 'liza@mimozamemories.hu'
   },

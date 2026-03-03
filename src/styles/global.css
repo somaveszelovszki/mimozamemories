@@ -192,6 +192,10 @@
   [data-slot='select-item'] {
     @apply cursor-pointer!;
   }
+
+  img {
+    @apply rounded-xl border-0;
+  }
 }
 
 button {

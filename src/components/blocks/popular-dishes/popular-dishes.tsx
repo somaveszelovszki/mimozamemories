@@ -26,7 +26,7 @@ const PopularDishes = ({ popularDishes }: { popularDishes: PopularDish }) => {
           {popularDishes.map((member, index) => (
             <Card
               key={index}
-              className='hover:border-primary group overflow-hidden rounded-none p-0 shadow-none transition-colors duration-300'
+              className='hover:border-primary group overflow-hidden p-0 shadow-none transition-colors duration-300'
             >
               <a
                 href={`/weddings/${member.slug}`}
@@ -35,7 +35,12 @@ const PopularDishes = ({ popularDishes }: { popularDishes: PopularDish }) => {
               >
                 <CardContent className='px-0'>
                   <div className='bg-muted'>
-                    <img src={member.image} alt={member.alt} className='h-auto w-full' loading='lazy' />
+                    <img
+                      src={member.image}
+                      alt={member.alt}
+                      className='h-auto w-full transition-transform duration-300 group-hover:scale-105'
+                      loading='lazy'
+                    />
                   </div>
                   <div className='space-y-3 px-6 py-5'>
                     <CardTitle className='text-lg'>{member.name}</CardTitle>

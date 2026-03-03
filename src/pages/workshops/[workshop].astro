@@ -61,14 +61,19 @@ const pageImage = portfolio.coverImage
   <section class='mx-auto max-w-6xl px-4 pb-10 sm:px-6 sm:pb-14 lg:px-8 lg:pb-18'>
     <div id='workshop-gallery' class='columns-1 gap-4 sm:columns-2 lg:columns-3' data-images={JSON.stringify(portfolio.images)}>
       {portfolio.images.map((image, index) => (
-        <figure class='mb-4 break-inside-avoid overflow-hidden rounded-lg border'>
+        <figure class='mb-4 break-inside-avoid overflow-hidden rounded-lg'>
           <button
             type='button'
             data-gallery-index={index}
             aria-label={`${index + 1}. kép megnyitása`}
-            class='focus-visible:ring-ring block w-full cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+            class='focus-visible:ring-ring hover:border-primary group block w-full cursor-pointer rounded-lg border border-transparent outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-offset-2'
           >
-            <img src={image} alt={`${portfolio.title} galéria kép ${index + 1}`} class='h-auto w-full object-cover' loading='lazy' />
+            <img
+              src={image}
+              alt={`${portfolio.title} galéria kép ${index + 1}`}
+              class='h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105'
+              loading='lazy'
+            />
           </button>
         </figure>
       ))}
@@ -98,7 +103,7 @@ const pageImage = portfolio.coverImage
       ‹
     </button>
 
-    <img id='gallery-image' src='' alt='' class='max-h-[90vh] max-w-full rounded-lg object-contain' />
+    <img id='gallery-image' src='' alt='' class='max-h-[90vh] max-w-full rounded-xl object-contain' />
 
     <button
       type='button'

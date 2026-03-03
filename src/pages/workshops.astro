@@ -24,7 +24,7 @@ const pageDescription =
 
     <div class='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
       {workshopPortfolios.map(workshop => (
-        <article class='border-border overflow-hidden rounded-xl border bg-card'>
+        <article class='border-border hover:border-primary overflow-hidden rounded-xl border bg-card transition-colors duration-300'>
           <a href={`/workshops/${workshop.slug}`} class='group block'>
             <img
               src={workshop.coverImage}
