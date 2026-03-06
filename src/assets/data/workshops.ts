@@ -154,5 +154,3 @@ export const upcomingWorkshops: UpcomingWorkshop[] = [
   }
 ]
 
-export const workshopsCalendarEmbedUrl =
-  'https://calendar.google.com/calendar/embed?src=hu.hungarian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FBudapest'

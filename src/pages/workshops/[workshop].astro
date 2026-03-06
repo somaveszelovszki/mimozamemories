@@ -61,7 +61,7 @@ const pageImage = portfolio.coverImage
   <section class='mx-auto max-w-6xl px-4 pb-10 sm:px-6 sm:pb-14 lg:px-8 lg:pb-18'>
     <div id='workshop-gallery' class='columns-1 gap-4 sm:columns-2 lg:columns-3' data-images={JSON.stringify(portfolio.images)}>
       {portfolio.images.map((image, index) => (
-        <figure class='mb-4 break-inside-avoid overflow-hidden rounded-lg'>
+        <figure class='mb-4 break-inside-avoid overflow-hidden rounded-xl'>
           <button
             type='button'
             data-gallery-index={index}
@@ -103,7 +103,7 @@ const pageImage = portfolio.coverImage
       ‹
     </button>
 
-    <img id='gallery-image' src='' alt='' class='max-h-[90vh] max-w-full rounded-xl object-contain' />
+    <img id='gallery-image' src='' alt='' class='max-h-[90vh] max-w-full rounded-2xl object-contain' />
 
     <button
       type='button'

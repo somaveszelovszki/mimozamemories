@@ -1,10 +1,31 @@
 ---
+import WorkshopsCalendar from '@/components/blocks/workshops-section/workshops-calendar'
+import { upcomingWorkshops, workshopPortfolios } from '@/assets/data/workshops'
 import Layout from '@/layouts/Layout.astro'
-import { upcomingWorkshops, workshopPortfolios, workshopsCalendarEmbedUrl } from '@/assets/data/workshops'
 
 const pageTitle = 'Workshopok | Mimóza Memories'
 const pageDescription =
   'Nézd meg a korábbi Mimóza Memories workshopokat, jelentkezz a következő alkalmakra, és kövesd a workshop naptárat.'
+
+const workshopsCalendarEvents = [
+  ...workshopPortfolios.map(workshop => ({
+    title: workshop.title,
+    date: workshop.date,
+    location: workshop.location,
+    facebookEventUrl: workshop.facebookEventUrl,
+    registrationUrl: workshop.registrationUrl,
+    isPast: true
+  })),
+  ...upcomingWorkshops.map(workshop => ({
+    title: workshop.title,
+    date: workshop.date,
+    time: workshop.time,
+    location: workshop.location,
+    facebookEventUrl: workshop.facebookEventUrl,
+    registrationUrl: workshop.registrationUrl,
+    isPast: false
+  }))
+]
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
@@ -87,20 +108,13 @@ const pageDescription =
     </div>
   </section>
 
-  <section id='workshops-calendar' class='mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14'>
+  <section id='workshops-calendar' class='mx-auto w-full max-w-[74rem] px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14'>
     <div class='mb-6 space-y-3'>
       <h2 class='font-serif text-2xl font-semibold sm:text-3xl'>Workshop naptár</h2>
       <p class='text-muted-foreground max-w-3xl text-lg'>
-        Beágyazott naptár a közelgő időpontokkal. A dátumokat könnyen tudjuk frissíteni a következő workshopok szerint.
+        Interaktív naptár, ahol minden korábbi és következő workshop dátuma egy helyen látható.
       </p>
     </div>
-    <div class='border-border overflow-hidden rounded-xl border bg-card'>
-      <iframe
-        src={workshopsCalendarEmbedUrl}
-        title='Mimóza Memories workshop naptár'
-        class='h-[600px] w-full'
-        loading='lazy'
-      ></iframe>
-    </div>
+    <WorkshopsCalendar events={workshopsCalendarEvents} client:visible />
   </section>
 </Layout>

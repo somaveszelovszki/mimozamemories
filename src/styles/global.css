@@ -194,10 +194,148 @@
   }
 
   img {
-    @apply rounded-xl border-0;
+    @apply rounded-2xl border-0;
   }
 }
 
 button {
   @apply cursor-pointer;
+}
+
+.mimoza-calendar .fc {
+  font-family: var(--font-sans);
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--muted);
+  --fc-list-event-hover-bg-color: var(--muted);
+}
+
+.mimoza-calendar .fc .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.mimoza-calendar .fc .fc-toolbar-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.mimoza-calendar .fc .fc-button {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  text-transform: none;
+  border-radius: 9999px;
+  font-weight: 500;
+  box-shadow: none;
+  padding: 0.38rem 0.7rem;
+}
+
+.mimoza-calendar .fc .fc-button:hover,
+.mimoza-calendar .fc .fc-button:focus {
+  background: var(--muted);
+}
+
+.mimoza-calendar .fc .fc-button-primary:not(:disabled).fc-button-active,
+.mimoza-calendar .fc .fc-button-primary:not(:disabled):active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.mimoza-calendar .fc .fc-col-header-cell {
+  background: color-mix(in srgb, var(--muted) 45%, var(--background));
+}
+
+.mimoza-calendar .fc .fc-col-header-cell-cushion {
+  padding: 0.55rem 0.2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.mimoza-calendar .fc .fc-daygrid-day-frame {
+  min-height: 4.2rem;
+  padding: 0.2rem 0.25rem;
+}
+
+.mimoza-calendar .fc .fc-daygrid-day-top {
+  padding: 0.2rem 0.2rem 0.15rem;
+}
+
+.mimoza-calendar .fc .fc-daygrid-day-number {
+  color: var(--foreground);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.mimoza-calendar .fc .fc-day-today {
+  background: color-mix(in srgb, var(--accent) 8%, var(--background)) !important;
+}
+
+.mimoza-calendar .fc .fc-daygrid-week-number {
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--muted) 45%, var(--background));
+  border-right: 1px solid var(--border);
+}
+
+.mimoza-calendar .fc .fc-event.mimoza-fc-event {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.5rem;
+  padding: 0.14rem 0.4rem;
+  margin-top: 0.18rem;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 10%, transparent);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
+}
+
+.mimoza-calendar .fc .fc-event.mimoza-fc-event:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.mimoza-calendar .fc .fc-event.mimoza-fc-event .fc-event-main {
+  white-space: normal;
+}
+
+.mimoza-calendar .mimoza-fc-event-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.mimoza-calendar .mimoza-fc-event-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+}
+
+.mimoza-calendar .mimoza-fc-event-location {
+  display: block;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .mimoza-calendar .fc .fc-daygrid-day-frame {
+    min-height: 3.2rem;
+  }
 }
